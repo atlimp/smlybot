@@ -1,0 +1,56 @@
+#!/bin/bash
+
+BASE_URL='http://localhost:3000'
+
+# Transaction id
+txid=$1
+
+echo "Got transaction $txid"
+
+# Raw hex encoded transaction
+rawtx=$(smileycoin-cli getrawtransaction "$txid")
+
+# Raw hex encoded message, OP_RETURN.
+rawmessage=$(smileycoin-cli decoderawtransaction "$rawtx" | grep OP_RETURN | awk '{print $4}' | sed 's/[",]//g')
+
+if [[ "$rawmessage" == "" ]]; then
+		echo "No message in transaction"
+		exit 1
+fi
+		
+echo "Received raw message: $rawmessage"
+
+message=$(./decode "$rawmessage")
+
+echo "Decoded message: $message"
+
+#########################
+#						#
+#	Message handling	#
+#						#
+#########################
+
+# Messages should be of the form OP:arg
+#
+# OP codes:	
+#			1: Follow, expects username as second argument.
+#			2: Like, expects tweet id of requested tweet.
+#			3: Retweet, expects tweet id of requested tweet.
+
+
+OP=$(echo "$message" | cut -f 1 -d':')
+arg=$(echo "$message" | cut -f 2 -d':')
+
+endpoint=""
+
+case $OP in
+		1) endpoint="/follow/$arg" ;;
+		2) endpoint="/like/$arg" ;;
+		3) endpoint="/retweet/$arg" ;;
+esac
+
+echo "Sending HTTP request to $BASE_URL$endpoint"
+# Add error handling if curl error
+res=$(curl "$BASE_URL$endpoint")
+
+echo "Received response from server: $res"
