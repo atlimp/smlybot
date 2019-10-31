@@ -2,7 +2,7 @@
 
 
 BASE_URL='http://localhost:3000'
-
+MY_ADDRESS='B5Rg1kZbNv4Jf2UjQzRDziEV84exbgEuBs'
 # Adjust prices for OPS
 COST_FOLLOW=0
 COST_LIKE=0
@@ -40,7 +40,6 @@ getendpoint() {
 
 	local endpoint=""
 
-	# TODO: Get endpoint if amount is sufficient
 	case $OP in
 			$FOLLOW) [[ $(checkprice $amount $OP) == 1 ]] && endpoint="/follow/$arg" ;;
 			$LIKE) [[ $(checkprice $amount $OP) == 1 ]] && endpoint="/like/$arg" ;;
@@ -59,6 +58,16 @@ echo "Got transaction $txid"
 # Raw hex encoded transaction
 rawtx=$(smileycoin-cli getrawtransaction "$txid")
 
+# TODO: Get received amount dropping decimal point
+amt=$(smileycoin-cli decoderawtransaction $rawtx | awk '/value/ {val=$3} pnxt == 1 {print $0, val; pnxt=0} /addresses/ {pnxt=1}' | grep $MY_ADDRESS | sed -e 's/^\s\+//g' -e 's/[,"]//g' -e 's/\..*$//g' | awk '{print $2}')
+
+if [[ "$amt" == "" ]]; then
+		echo "Amount is not valid"
+		echo "Exiting..."
+		exit 1
+fi
+echo "Received amount: $amt"
+
 # Raw hex encoded message, OP_RETURN.
 rawmessage=$(smileycoin-cli decoderawtransaction "$rawtx" | grep OP_RETURN | awk '{print $4}' | sed 's/[",]//g')
 
@@ -67,9 +76,6 @@ if [[ "$rawmessage" == "" ]]; then
 		echo "Exiting..."
 		exit 1
 fi
-
-# TODO: Get received amount
-amt=10
 
 echo "Received raw message: $rawmessage"
 
