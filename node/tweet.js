@@ -18,11 +18,10 @@ async function follow(user) {
     });
 
 	try {
-		const res = await client.post('friendships/create', { screen_name: user });
+        const res = await client.post('friendships/create', { screen_name: user });
 		return res;
 	} catch (e) {
-        console.error(res)
-        return null;
+        throw e;
 	}
 }
 
@@ -38,8 +37,7 @@ async function like(tweet) {
         const res = await client.post('favorites/create', { id: tweet });
         return res;
     } catch (e) {
-        console.error(e);
-        return null
+        throw e;
     }
 }
 
@@ -55,10 +53,20 @@ async function retweet(tweet) {
         const res = await client.post('statuses/retweet', { id: tweet });
         return res;
     } catch (e) {
-        console.error(e);
-        return null;
+        throw e;
     }
 }
+
+async function main() {
+    try {
+        const res = await follow('atlima1298129rcher');
+        console.log(res);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+//main();
 
 module.exports = {
     follow,

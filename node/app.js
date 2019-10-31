@@ -15,14 +15,10 @@ app.get('/follow/:user', async (req, res) => {
 
 	try {
 		result = await follow(user);
-		if (result) {
-			res.send(`Started following user:  ${user}\n`);
-		} else {
-			res.send('Unexpected error\n');
-		}
+		res.send(`Started following user:  ${user}\n`);
 	} catch (e) {
 		console.error(e);
-		res.send('Unexpected error\n');
+		res.send(`Unexpected error: ${e[0].message}\n`);
 	}
 });
 
@@ -31,14 +27,10 @@ app.get('/like/:id', async (req, res) => {
 
 	try {
 		result = await like(id);
-		if (result) {
-			res.send(`Liked tweet: ${id}\n`);
-		} else {
-			res.send('Unexpected error\n');
-		}
+		res.send(`Liked tweet: ${id}\n`);
 	} catch (e) {
 		console.error(e);
-		res.send('Unexpected error\n');
+		res.send(`Unexpected error: ${e[0].message}\n`);
 	}
 });
 
@@ -47,14 +39,10 @@ app.get('/retweet/:id', async (req, res) => {
 
 	try {
 		result = await retweet(id);
-		if (result) {
-			res.send(`retweeted tweet: ${id}\n`);
-		} else {
-			res.send('Unexpected error\n');
-		}
+		res.send(`retweeted tweet: ${id}\n`);
 	} catch (e) {
 		console.error(e);
-		res.send('Unexpected error\n');
+		res.send(`Unexpected error: ${e[0].message}\n`);
 	}
 });
 
