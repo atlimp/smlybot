@@ -3,11 +3,12 @@
 
 BASE_URL='http://localhost:3000'
 
-# Adjust prices for ops
+# Adjust prices for OPS
 COST_FOLLOW=0
 COST_LIKE=0
-COST_RETWEET=i
+COST_RETWEET=0
 
+# Indicies for OPS
 FOLLOW=1
 LIKE=2
 RETWEET=3
@@ -37,7 +38,7 @@ getendpoint() {
 	local OP=$(echo "$msg" | cut -f 1 -d':')
 	local arg=$(echo "$msg" | cut -f 2 -d':')
 
-	endpoint=""
+	local endpoint=""
 
 	# TODO: Get endpoint if amount is sufficient
 	case $OP in
@@ -68,7 +69,8 @@ if [[ "$rawmessage" == "" ]]; then
 fi
 
 # TODO: Get received amount
-		
+amt=10
+
 echo "Received raw message: $rawmessage"
 
 message=$(./decode "$rawmessage")
@@ -98,10 +100,13 @@ if [[ "$(echo $message | grep -E "$pattern")" == "" ]]; then
 		exit 1
 fi
 
+endpoint=$(getendpoint $message $amt)
 
-
-
-
+if [[ "$endpoint" == "" ]]; then
+		echo "Not enough funds for operation"
+		echo "Exiting..."
+		exit 1
+fi
 
 echo "Sending HTTP request to $BASE_URL$endpoint"
 # Add error handling if curl error
@@ -112,6 +117,7 @@ if [[ "$curlstatus" != 0 ]]; then
 		echo "curl responded with a non zero exit status: $curlstatus"
 		echo "Exiting..."
 		exit 1
+fi
 
 echo "Received response from server: $res"
 
