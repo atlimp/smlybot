@@ -1,6 +1,54 @@
 #!/bin/bash
 
+
 BASE_URL='http://localhost:3000'
+
+# Adjust prices for ops
+COST_FOLLOW=0
+COST_LIKE=0
+COST_RETWEET=i
+
+FOLLOW=1
+LIKE=2
+RETWEET=3
+
+# Check if price is enough for operation
+# checkprice amount operation
+checkprice() {
+	local amount=$1
+	local OP=$2
+	local res=0
+
+	case $OP in
+			$FOLLOW) [[ $amount -ge $COST_FOLLOW ]] && res=1 ;;
+			$LIKE) [[ $amount -ge $COST_LIKE ]] && res=1 ;;
+			$RETWEET) [[ $amount -ge $COST_RETWEET ]] && res=1 ;;	
+	esac
+
+	echo $res
+}
+
+# Get endpoint for API.  Empty string if not enough funds
+# getendpoint msg amount
+getendpoint() {
+	local msg=$1
+	local amount=$2
+
+	local OP=$(echo "$msg" | cut -f 1 -d':')
+	local arg=$(echo "$msg" | cut -f 2 -d':')
+
+	endpoint=""
+
+	# TODO: Get endpoint if amount is sufficient
+	case $OP in
+			$FOLLOW) [[ $(checkprice $amount $OP) == 1 ]] && endpoint="/follow/$arg" ;;
+			$LIKE) [[ $(checkprice $amount $OP) == 1 ]] && endpoint="/like/$arg" ;;
+			$RETWEET) [[ $(checkprice $amount $OP) == 1 ]] && endpoint="/retweet/$arg" ;;
+	esac
+	
+	echo $endpoint
+}
+
 
 # Transaction id
 txid=$1
@@ -15,8 +63,11 @@ rawmessage=$(smileycoin-cli decoderawtransaction "$rawtx" | grep OP_RETURN | awk
 
 if [[ "$rawmessage" == "" ]]; then
 		echo "No message in transaction"
+		echo "Exiting..."
 		exit 1
 fi
+
+# TODO: Get received amount
 		
 echo "Received raw message: $rawmessage"
 
@@ -37,20 +88,36 @@ echo "Decoded message: $message"
 #			2: Like, expects tweet id of requested tweet.
 #			3: Retweet, expects tweet id of requested tweet.
 
+# Check for syntax error in message
+pattern="^[1-3]:.*$"
 
-OP=$(echo "$message" | cut -f 1 -d':')
-arg=$(echo "$message" | cut -f 2 -d':')
+if [[ "$(echo $message | grep -E "$pattern")" == "" ]]; then
+		# Syntax error in message
+		echo "Invalid message"
+		echo "Exiting..."
+		exit 1
+fi
 
-endpoint=""
 
-case $OP in
-		1) endpoint="/follow/$arg" ;;
-		2) endpoint="/like/$arg" ;;
-		3) endpoint="/retweet/$arg" ;;
-esac
+
+
+
 
 echo "Sending HTTP request to $BASE_URL$endpoint"
 # Add error handling if curl error
 res=$(curl "$BASE_URL$endpoint")
+curlstatus="$?"
+
+if [[ "$curlstatus" != 0 ]]; then
+		echo "curl responded with a non zero exit status: $curlstatus"
+		echo "Exiting..."
+		exit 1
 
 echo "Received response from server: $res"
+
+if [[ "$(echo $res | grep error)" != "" ]]; then
+		# Error from API
+		echo "Received error from API: $res"
+		echo "Exiting..."
+		exit 1
+fi
