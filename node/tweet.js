@@ -8,7 +8,10 @@ const {
 	ACCESS_SECRET: access_token_secret,
 } = process.env;
 
-
+/**
+ * Attempts to follow user.  Throws error on failure (e.g. if user does not exits)
+ * @param {*twitter username*} user 
+ */
 async function follow(user) {
     const client = new Twitter({
         consumer_key,
@@ -25,6 +28,10 @@ async function follow(user) {
 	}
 }
 
+/**
+ * Attempts to like tweet.  Throws error on failure (e.g. if tweet does not exits)
+ * @param {*id of tweet*} tweet 
+ */
 async function like(tweet) {
     const client = new Twitter({
         consumer_key,
@@ -41,6 +48,10 @@ async function like(tweet) {
     }
 }
 
+/**
+ * Attempts to retweet tweet.  Throws error on failure (e.g. if tweet does not exits)
+ * @param {*id of tweet*} tweet 
+ */
 async function retweet(tweet) {
     const client = new Twitter({
         consumer_key,
@@ -56,17 +67,6 @@ async function retweet(tweet) {
         throw e;
     }
 }
-
-async function main() {
-    try {
-        const res = await follow('atlima1298129rcher');
-        console.log(res);
-    } catch (e) {
-        console.error(e);
-    }
-}
-
-//main();
 
 module.exports = {
     follow,

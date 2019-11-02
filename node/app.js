@@ -10,6 +10,13 @@ const {
 
 const app = express();
 
+/**
+ * All endpoints are listening for get requests for simplicity
+ */
+
+/**
+ * Attemps to follow user.  Sends message if successful, error if unsuccessful.
+ */
 app.get('/follow/:user', async (req, res) => {
 	const { user } = req.params;
 
@@ -22,6 +29,9 @@ app.get('/follow/:user', async (req, res) => {
 	}
 });
 
+/**
+ * Attemps to like tweet.  Sends message if successful, error if unsuccessful.
+ */
 app.get('/like/:id', async (req, res) => {
 	const { id } = req.params;
 
@@ -34,6 +44,9 @@ app.get('/like/:id', async (req, res) => {
 	}
 });
 
+/**
+ * Attemps to retweet tweet.  Sends message if successful, error if unsuccessful.
+ */
 app.get('/retweet/:id', async (req, res) => {
 	const { id } = req.params;
 

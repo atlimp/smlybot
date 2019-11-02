@@ -1,7 +1,7 @@
 {
   "name": "smlybot",
   "version": "1.0.0",
-  "description": "",
+  "description": "API for following, liking and retweeting users and tweets",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/atlimp/smlybot.git"
   },
-  "author": "",
+  "author": "Atli Marcher Pálsson",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/atlimp/smlybot/issues"
