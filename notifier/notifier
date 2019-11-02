@@ -58,7 +58,7 @@ echo "Got transaction $txid"
 # Raw hex encoded transaction
 rawtx=$(smileycoin-cli getrawtransaction "$txid")
 
-# TODO: Get received amount dropping decimal point
+# Get received amount dropping decimal point
 amt=$(smileycoin-cli decoderawtransaction $rawtx | awk '/value/ {val=$3} pnxt == 1 {print $0, val; pnxt=0} /addresses/ {pnxt=1}' | grep $MY_ADDRESS | sed -e 's/^\s\+//g' -e 's/[,"]//g' -e 's/\..*$//g' | awk '{print $2}')
 
 if [[ "$amt" == "" ]]; then
