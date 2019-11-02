@@ -10,14 +10,14 @@ Clone this repository using
 $ git clone https://github.com/atlimp/smlybot
 ```
 
-Need to have an installed version of the [SmileyCoin Wallet][https://github.com/tutor-web/smileyCoin], a bash interpreter and a recent version of NodeJS.
+Need to have an installed version of the [SmileyCoin Wallet](https://github.com/tutor-web/smileyCoin), a bash interpreter and a recent version of NodeJS.
 
 ## Further instructions
 
 View the respective README's for each section
 
-* [NodeJS section][https://github.com/atlimp/smlybot/tree/master/node]
-* [Bash section][https://github.com/atlimp/smlybot/tree/master/notifier]
+* [NodeJS section](https://github.com/atlimp/smlybot/tree/master/node)
+* [Bash section](https://github.com/atlimp/smlybot/tree/master/notifier)
 
 ## Author
 Atli Marcher Pálsson 
