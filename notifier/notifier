@@ -3,7 +3,8 @@
 LOGFILE='./logfile'
 
 BASE_URL='http://localhost:3000'
-MY_ADDRESS='B5Rg1kZbNv4Jf2UjQzRDziEV84exbgEuBs'
+MY_ADDRESS='BPXDv9a5jYXg13Bn2irg4zvizorfwjr9sf'
+# Error handling
 # Adjust prices for OPS
 COST_FOLLOW=0
 COST_LIKE=0
@@ -100,6 +101,17 @@ message=$(./decode "$rawmessage")
 
 echo "Decoded message: $message" | tee -a $LOGFILE
 
+refundTransaction() {
+    local senderTxid=$(smileycoin-cli decoderawtrasaction $rawtx | sed -e '1,/vin/d' -e '/"vout"*:*\[/' | grep txid | awk '{print $3}' | sed 's/[",]//g')
+    local senderVout=$(smileycoin-cli decoderawtrasaction $rawtx | sed -e '1,/vin/d' -e '/"vout"*:*\[/' | grep vout | awk '{print $3}' | sed 's/[",]//g')
+
+    local senderTx=$(smileycoin-cli getrawtransaction $senderTxid)
+    local recipient=$(smileycoin-cli decoderawtransaction $senderTx | sed -n -e '/\s*"n"\s*:\s*'"$senderVout/,/]/p" | sed -e '$d'| sed '/]/,$d'|tail -1| sed -e 's/[",:]//g' -e 's/^\s*//g')
+
+    smileycoin-cli sendtoaddress $recipient $(($amt - 1))
+    echo "refunding $amt to $recipient" | tee -a $LOGFILE
+}
+
 #########################
 #						#
 #	Message handling	#
@@ -139,6 +151,7 @@ curlstatus="$?"
 
 if [[ "$curlstatus" != 0 ]]; then
 		echo "curl responded with a non zero exit status: $curlstatus" | tee -a $LOGFILE
+    refundTransaction
 		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
@@ -151,3 +164,4 @@ if [[ "$(echo $res | grep error)" != "" ]]; then
 		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
+
