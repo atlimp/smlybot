@@ -67,6 +67,11 @@ txid=$1
 
 echo "Got transaction $txid" | tee -a $LOGFILE
 
+if [[ "$(grep $txid $LOGFILE)" != "" ]]; then
+		echo "Duplicate transaction" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
+fi
+
 # Raw hex encoded transaction
 rawtx=$(smileycoin-cli getrawtransaction "$txid")
 
