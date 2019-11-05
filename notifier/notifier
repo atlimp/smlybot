@@ -1,5 +1,6 @@
 #!/bin/bash
 
+LOGFILE='./logfile'
 
 BASE_URL='http://localhost:3000'
 MY_ADDRESS='B5Rg1kZbNv4Jf2UjQzRDziEV84exbgEuBs'
@@ -26,7 +27,7 @@ checkprice() {
 			$RETWEET) [[ $amount -ge $COST_RETWEET ]] && res=1 ;;	
 	esac
 
-	echo $res
+	echo $res 
 }
 
 # Get endpoint for API.  Empty string if not enough funds
@@ -49,11 +50,13 @@ getendpoint() {
 	echo $endpoint
 }
 
+echo '#######################################################################' | tee -a $LOGFILE
+date | tee -a $LOGFILE
 
 # Transaction id
 txid=$1
 
-echo "Got transaction $txid"
+echo "Got transaction $txid" | tee -a $LOGFILE
 
 # Raw hex encoded transaction
 rawtx=$(smileycoin-cli getrawtransaction "$txid")
@@ -62,26 +65,26 @@ rawtx=$(smileycoin-cli getrawtransaction "$txid")
 amt=$(smileycoin-cli decoderawtransaction $rawtx | awk '/value/ {val=$3} pnxt == 1 {print $0, val; pnxt=0} /addresses/ {pnxt=1}' | grep $MY_ADDRESS | sed -e 's/^\s\+//g' -e 's/[,"]//g' -e 's/\..*$//g' | awk '{print $2}')
 
 if [[ "$amt" == "" ]]; then
-		echo "Amount is not valid"
-		echo "Exiting..."
+		echo "Amount is not valid" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
-echo "Received amount: $amt"
+echo "Received amount: $amt" | tee -a $LOGFILE
 
 # Raw hex encoded message, OP_RETURN.
 rawmessage=$(smileycoin-cli decoderawtransaction "$rawtx" | grep OP_RETURN | awk '{print $4}' | sed 's/[",]//g')
 
 if [[ "$rawmessage" == "" ]]; then
-		echo "No message in transaction"
-		echo "Exiting..."
+		echo "No message in transaction" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
 
-echo "Received raw message: $rawmessage"
+echo "Received raw message: $rawmessage" | tee -a $LOGFILE
 
 message=$(./decode "$rawmessage")
 
-echo "Decoded message: $message"
+echo "Decoded message: $message" | tee -a $LOGFILE
 
 #########################
 #						#
@@ -101,35 +104,35 @@ pattern="^[1-3]:.*$"
 
 if [[ "$(echo $message | grep -E "$pattern")" == "" ]]; then
 		# Syntax error in message
-		echo "Invalid message"
-		echo "Exiting..."
+		echo "Invalid message" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
 
 endpoint=$(getendpoint $message $amt)
 
 if [[ "$endpoint" == "" ]]; then
-		echo "Not enough funds for operation"
-		echo "Exiting..."
+		echo "Not enough funds for operation" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
 
-echo "Sending HTTP request to $BASE_URL$endpoint"
+echo "Sending HTTP request to $BASE_URL$endpoint" | tee -a $LOGFILE
 # Add error handling if curl error
 res=$(curl "$BASE_URL$endpoint")
 curlstatus="$?"
 
 if [[ "$curlstatus" != 0 ]]; then
-		echo "curl responded with a non zero exit status: $curlstatus"
-		echo "Exiting..."
+		echo "curl responded with a non zero exit status: $curlstatus" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
 
-echo "Received response from server: $res"
+echo "Received response from server: $res" | tee -a $LOGFILE
 
 if [[ "$(echo $res | grep error)" != "" ]]; then
 		# Error from API
-		echo "Received error from API: $res"
-		echo "Exiting..."
+		echo "Received error from API: $res" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
