@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const { follow, like, retweet } = require('./tweet');
+const { follow, like, retweet, mention } = require('./tweet');
 
 const {
 	HOST: host = 'localhost',
@@ -58,6 +58,18 @@ app.get('/retweet/:id', async (req, res) => {
 		res.send(`Unexpected error: ${e[0].message}\n`);
 	}
 });
+
+app.get('/mention/:user/:message', async (req, res) => {
+	const { user, message } = req.params;
+
+	try {
+		result = await mention(user, message);
+		res.send(`mentioned user with message: ${user}, ${message}\n`);
+	} catch (e) {
+		console.error(e);
+		res.send(`Unexpected error: ${e[0].message}\n`);
+	}
+})
 
 app.listen(port, host, () => {
 	console.info(`Server running ${host}:${port}`);

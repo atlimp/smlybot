@@ -68,8 +68,25 @@ async function retweet(tweet) {
     }
 }
 
+async function mention(user, message) {
+    const client = new Twitter({
+        consumer_key,
+        consumer_secret,
+        access_token_key,
+        access_token_secret,
+    });
+
+    try {
+        const res = await client.post('statuses/update', { status: `@${user} says: ${message}` });
+        return res;
+    } catch (e) {
+        throw e;
+    }
+}
+
 module.exports = {
     follow,
     like,
     retweet,
+    mention,
 };
