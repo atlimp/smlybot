@@ -1,0 +1,189 @@
+#######################################################################
+Tue 05 Nov 2019 10:48:25 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Invalid message
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:48:41 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000/mention/4/atlimarcher
+Received response from server: mentioned user with message: 4, atlimarcher
+#######################################################################
+Tue 05 Nov 2019 10:49:21 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000/mention/atlimarcher/atlimarcher
+Received response from server: mentioned user with message: atlimarcher, atlimarcher
+#######################################################################
+Tue 05 Nov 2019 10:49:55 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000/mention/atlimarcher/hello
+Received response from server: mentioned user with message: atlimarcher, hello
+#######################################################################
+Tue 05 Nov 2019 10:50:16 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000/mention/atlimarcher/hello
+Received response from server: Unexpected error: Status is a duplicate.
+Received error from API: Unexpected error: Status is a duplicate.
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:51:16 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000/mention/atlimarcher/hello
+Received response from server: mentioned user with message: atlimarcher, hello
+#######################################################################
+Tue 05 Nov 2019 10:52:04 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:52:54 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000
+/mention/atlimarcher/
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:53:04 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:54:12 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:54:55 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:57:22 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:58:19 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000
+hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:58:50 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:30004:atlimarcher:hello
+
+hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:59:25 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000hello
+
+hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 10:59:48 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000hello
+
+hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 11:00:31 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000hello
+
+hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 11:01:38 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:30004:atlimarcher:hello
+
+hello
+/mention/atlimarcher/hello
+curl responded with a non zero exit status: 3
+Exiting...
+#######################################################################
+Tue 05 Nov 2019 11:02:35 AM GMT
+Got transaction 08c447e1c1dfca57bcff2543f5af8508a9fa10b911f85bfb93fb8632816ac66d
+Received amount: 9
+Received raw message: 343a61746c696d6172636865723a68656c6c6f20776f726c64
+Decoded message: 4:atlimarcher:hello world
+Sending HTTP request to http://localhost:3000/mention/atlimarcher/hello%20world
+Received response from server: mentioned user with message: atlimarcher, hello world

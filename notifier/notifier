@@ -8,11 +8,13 @@ MY_ADDRESS='B5Rg1kZbNv4Jf2UjQzRDziEV84exbgEuBs'
 COST_FOLLOW=0
 COST_LIKE=0
 COST_RETWEET=0
+COST_MENTION=0
 
 # Indicies for OPS
 FOLLOW=1
 LIKE=2
 RETWEET=3
+MENTION=4
 
 # Check if price is enough for operation
 # checkprice amount operation
@@ -25,6 +27,7 @@ checkprice() {
 			$FOLLOW) [[ $amount -ge $COST_FOLLOW ]] && res=1 ;;
 			$LIKE) [[ $amount -ge $COST_LIKE ]] && res=1 ;;
 			$RETWEET) [[ $amount -ge $COST_RETWEET ]] && res=1 ;;	
+			$MENTION) [[ $amount -ge $COST_MENTION ]] && res=1 ;;
 	esac
 
 	echo $res 
@@ -45,6 +48,12 @@ getendpoint() {
 			$FOLLOW) [[ $(checkprice $amount $OP) == 1 ]] && endpoint="/follow/$arg" ;;
 			$LIKE) [[ $(checkprice $amount $OP) == 1 ]] && endpoint="/like/$arg" ;;
 			$RETWEET) [[ $(checkprice $amount $OP) == 1 ]] && endpoint="/retweet/$arg" ;;
+			$MENTION) if [[ $(checkprice $amount $OP) == 1 ]]; then
+					local user=$(echo "$msg" | cut -d':' -f 2)
+					local tweet=$(echo "$msg" | cut -d':' -f 3 | sed 's/ /%20/g')
+					endpoint="/mention/$user/$tweet"
+					fi
+					;;
 	esac
 	
 	echo $endpoint
@@ -100,7 +109,7 @@ echo "Decoded message: $message" | tee -a $LOGFILE
 #			3: Retweet, expects tweet id of requested tweet.
 
 # Check for syntax error in message
-pattern="^[1-3]:.*$"
+pattern="^[1-4]:.*$"
 
 if [[ "$(echo $message | grep -E "$pattern")" == "" ]]; then
 		# Syntax error in message
@@ -109,7 +118,8 @@ if [[ "$(echo $message | grep -E "$pattern")" == "" ]]; then
 		exit 1
 fi
 
-endpoint=$(getendpoint $message $amt)
+endpoint=$(getendpoint "$message" "$amt")
+
 
 if [[ "$endpoint" == "" ]]; then
 		echo "Not enough funds for operation" | tee -a $LOGFILE
