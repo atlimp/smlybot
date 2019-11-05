@@ -102,14 +102,14 @@ message=$(./decode "$rawmessage")
 echo "Decoded message: $message" | tee -a $LOGFILE
 
 refundTransaction() {
-    local senderTxid=$(smileycoin-cli decoderawtrasaction $rawtx | sed -e '1,/vin/d' -e '/"vout"*:*\[/' | grep txid | awk '{print $3}' | sed 's/[",]//g')
-    local senderVout=$(smileycoin-cli decoderawtrasaction $rawtx | sed -e '1,/vin/d' -e '/"vout"*:*\[/' | grep vout | awk '{print $3}' | sed 's/[",]//g')
+    local senderTxid=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep txid | awk '{print $3}' | sed 's/[",]//g')
+    local senderVout=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep vout | awk '{print $3}' | sed 's/[",]//g')
 
     local senderTx=$(smileycoin-cli getrawtransaction $senderTxid)
     local recipient=$(smileycoin-cli decoderawtransaction $senderTx | sed -n -e '/\s*"n"\s*:\s*'"$senderVout/,/]/p" | sed -e '$d'| sed '/]/,$d'|tail -1| sed -e 's/[",:]//g' -e 's/^\s*//g')
 
-    smileycoin-cli sendtoaddress $recipient $(($amt - 1))
-    echo "refunding $amt to $recipient" | tee -a $LOGFILE
+	refundid=$(smileycoin-cli sendtoaddress $recipient $(($amt - 1)))
+	echo "refunding $(($amt-1)) to $recipient, txid: $refundid" | tee -a $LOGFILE
 }
 
 #########################
