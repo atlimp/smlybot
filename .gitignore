@@ -4,6 +4,6 @@ node/.env
 notifier/encode
 notifier/decode
 notifier/logfile
-
+*swp
 *~
 
