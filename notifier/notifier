@@ -1,10 +1,11 @@
 #!/bin/bash
 
-LOGFILE='./logfile'
 
+PROGRAM_PATH=$(dirname $(realpath "$0"))
 BASE_URL='http://localhost:3000'
-MY_ADDRESS='BPXDv9a5jYXg13Bn2irg4zvizorfwjr9sf'
-# Error handling
+MY_ADDRESS='BErUz8XVaAhJN2rkee7LtLZeGnpYW9DHRx'
+LOGFILE="$PROGRAM_PATH/logfile"
+
 # Adjust prices for OPS
 COST_FOLLOW=0
 COST_LIKE=0
@@ -60,21 +61,48 @@ getendpoint() {
 	echo $endpoint
 }
 
+refundTransaction() {
+    local senderTxid=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep txid | awk '{print $3}' | sed 's/[",]//g')
+    local senderVout=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep vout | awk '{print $3}' | sed 's/[",]//g')
+
+    local senderTx=$(smileycoin-cli getrawtransaction $senderTxid)
+    local recipient=$(smileycoin-cli decoderawtransaction $senderTx | sed -n -e '/\s*"n"\s*:\s*'"$senderVout/,/]/p" | sed -e '$d'| sed '/]/,$d'|tail -1| sed -e 's/[",:]//g' -e 's/^\s*//g')
+
+	refundid=$(smileycoin-cli sendtoaddress $recipient $(($amt - 1)))
+	echo "refunding $(($amt-1)) to $recipient, txid: $refundid" | tee -a $LOGFILE
+}
+
+if [[ "$#" == 0 ]]; then
+		echo "No arguments specified!" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
+		exit 1
+fi
+
 echo '#######################################################################' | tee -a $LOGFILE
 date | tee -a $LOGFILE
 
 # Transaction id
 txid=$1
 
-echo "Got transaction $txid" | tee -a $LOGFILE
-
 if [[ "$(grep $txid $LOGFILE)" != "" ]]; then
-		echo "Duplicate transaction" | tee -a $LOGFILE
+		echo "Duplicate transaction $txid" | tee -a $LOGFILE
 		echo "Exiting..." | tee -a $LOGFILE
+		exit 1
 fi
+
+echo "Got transaction $txid" | tee -a $LOGFILE
 
 # Raw hex encoded transaction
 rawtx=$(smileycoin-cli getrawtransaction "$txid")
+
+# Exit status of previous command
+daemonstatus="$?"
+
+if [[ "$daemonstatus" != "0" ]]; then
+		echo "Smileycoin daemon exited with non zero exit status" | tee -a $LOGFILE
+		echo "Exiting..." | tee -a $LOGFILE
+		exit 1
+fi
 
 # Get received amount dropping decimal point
 amt=$(smileycoin-cli decoderawtransaction $rawtx | awk '/value/ {val=$3} pnxt == 1 {print $0, val; pnxt=0} /addresses/ {pnxt=1}' | grep $MY_ADDRESS | sed -e 's/^\s\+//g' -e 's/[,"]//g' -e 's/\..*$//g' | awk '{print $2}')
@@ -97,20 +125,10 @@ fi
 
 echo "Received raw message: $rawmessage" | tee -a $LOGFILE
 
-message=$(./decode "$rawmessage")
+message=$($PROGRAM_PATH/decode "$rawmessage")
 
 echo "Decoded message: $message" | tee -a $LOGFILE
 
-refundTransaction() {
-    local senderTxid=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep txid | awk '{print $3}' | sed 's/[",]//g')
-    local senderVout=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep vout | awk '{print $3}' | sed 's/[",]//g')
-
-    local senderTx=$(smileycoin-cli getrawtransaction $senderTxid)
-    local recipient=$(smileycoin-cli decoderawtransaction $senderTx | sed -n -e '/\s*"n"\s*:\s*'"$senderVout/,/]/p" | sed -e '$d'| sed '/]/,$d'|tail -1| sed -e 's/[",:]//g' -e 's/^\s*//g')
-
-	refundid=$(smileycoin-cli sendtoaddress $recipient $(($amt - 1)))
-	echo "refunding $(($amt-1)) to $recipient, txid: $refundid" | tee -a $LOGFILE
-}
 
 #########################
 #						#

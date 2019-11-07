@@ -3,7 +3,7 @@ node/package-lock.json
 node/.env
 notifier/encode
 notifier/decode
-notifier/logfile
+*logfile
 *swp
 *~
 
