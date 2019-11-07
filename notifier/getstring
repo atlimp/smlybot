@@ -1,0 +1,42 @@
+#!/bin/bash
+
+showusage() {
+	echo "Usage: $0 -f <Operation> -u <id> [ -m <message> ]"
+	echo ""
+	echo -e "Operation:\tfollow, like, retweet, mention"
+	echo -e "id:\t\tusername or tweetid"
+	echo -e "message:\tOnly applicaple with -f mention"
+	exit
+}
+
+
+while getopts "f:i:m:" options; do
+
+		case ${options} in
+				"f") OP=${OPTARG} ;;
+				"i") id=${OPTARG} ;;
+				"m") msg=${OPTARG} ;;
+		esac
+done
+
+case "$OP" in
+		"follow") 	if [[ "$id" == "" ]]; then showusage; fi
+					str="1:$id" ;;
+		"like") 	if [[ "$id" == "" ]]; then showusage; fi
+					str="2:$id" ;;
+		"retweet") 	if [[ "$id" == "" ]]; then showusage; fi
+					str="3" ;;
+		"mention") 	
+					if [[ "$id" == ""  ]] || [[ "$msg" == "" ]]; then showusage; fi
+					str="4:$id:$msg" ;;
+				*)	showusage
+esac
+
+echo "$str"
+
+if [[ ! -f ./encode ]]; then
+		echo "Unable to encode"
+		exit 1
+fi
+
+echo "$(./encode "$str")"
