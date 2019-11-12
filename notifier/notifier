@@ -1,22 +1,7 @@
 #!/bin/bash
 
-
 PROGRAM_PATH=$(dirname $(realpath "$0"))
-BASE_URL='http://localhost:3000'
-MY_ADDRESS='BErUz8XVaAhJN2rkee7LtLZeGnpYW9DHRx'
-LOGFILE="$PROGRAM_PATH/logfile"
-
-# Adjust prices for OPS
-COST_FOLLOW=0
-COST_LIKE=0
-COST_RETWEET=0
-COST_MENTION=0
-
-# Indicies for OPS
-FOLLOW=1
-LIKE=2
-RETWEET=3
-MENTION=4
+source "$PROGRAM_PATH/constants"
 
 # Check if price is enough for operation
 # checkprice amount operation
