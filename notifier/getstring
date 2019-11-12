@@ -1,5 +1,8 @@
 #!/bin/bash
 
+PROGRAM_PATH=$(dirname $(realpath "$0"))
+source "$PROGRAM_PATH/constants"
+
 showusage() {
 	echo "Usage: $0 -f <Operation> -u <id> [ -m <message> ]"
 	echo ""
@@ -21,22 +24,33 @@ done
 
 case "$OP" in
 		"follow") 	if [[ "$id" == "" ]]; then showusage; fi
-					str="1:$id" ;;
+					str="1:$id" 
+					cost=$COST_FOLLOW ;;
 		"like") 	if [[ "$id" == "" ]]; then showusage; fi
-					str="2:$id" ;;
+					str="2:$id"
+					cost=$COST_LIKE ;;
 		"retweet") 	if [[ "$id" == "" ]]; then showusage; fi
-					str="3" ;;
+					str="3" 
+					cost=$COST_RETWEET ;;
 		"mention") 	
 					if [[ "$id" == ""  ]] || [[ "$msg" == "" ]]; then showusage; fi
-					str="4:$id:$msg" ;;
+					str="4:$id:$msg"
+					cost=$COST_MENTION ;;
 				*)	showusage
 esac
 
 echo "$str"
 
-if [[ ! -f ./encode ]]; then
+if [[ ! -f "$PROGRAM_PATH/encode" ]]; then
 		echo "Unable to encode"
 		exit 1
 fi
 
-echo "$(./encode "$str")"
+encoded=$("$PROGRAM_PATH/encode" "$str")
+
+
+echo "Encoded string $encoded"
+
+echo "Template rawtransaction string:"
+
+echo "[{\"txid\":\"id\",\"vout\":n}] {\"$MY_ADDRESS\":$cost, \"data\":\"$encoded\"}"
