@@ -16,17 +16,17 @@ Where OP is the index of the requested operation, arg is either the username or 
 
 The operations are
 
-	1) Follow
-	2) Like
-	3) Retweet
-	4) Mention
+	1. Follow
+	2. Like
+	3. Retweet
+	4. Mention
 
 For clarity here are some examples.
 
-Follow user @smlybot -> 1:smlybot
-Like [this tweet](https://twitter.com/smlybot/status/1202608102396301315) -> 2:1202608102396301315
-Retweet [this tweet](https://twitter.com/smlybot/status/1202608102396301315) -> 3:1202608102396301315
-Have the bot mention @smlybot with some message -> 4:smlybot:Hello World!
+Follow user @smlybot -> `1:smlybot`  
+Like [this tweet](https://twitter.com/smlybot/status/1202608102396301315) -> `2:1202608102396301315`  
+Retweet [this tweet](https://twitter.com/smlybot/status/1202608102396301315) -> `3:1202608102396301315`  
+Have the bot mention @smlybot with some message -> `4:smlybot:Hello World!`
 
 For ease of use you can use the provided program [getstring](https://github.com/atlimp/smlybot/blob/master/notifier/getstring) which writes the message and encodes it.
 
