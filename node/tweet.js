@@ -68,6 +68,11 @@ async function retweet(tweet) {
     }
 }
 
+/**
+ * Attempts to mention user with message.  Throws error on failure.
+ * @param {*twitter username*} user 
+ * @param {*message to include in tweet*} message 
+ */
 async function mention(user, message) {
     const client = new Twitter({
         consumer_key,

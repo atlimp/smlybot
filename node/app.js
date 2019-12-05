@@ -59,6 +59,9 @@ app.get('/retweet/:id', async (req, res) => {
 	}
 });
 
+/**
+ * Attempts to mention user with message.  Sends message if successful, error if unsuccessful.
+ */
 app.get('/mention/:user/:message', async (req, res) => {
 	const { user, message } = req.params;
 
