@@ -76,6 +76,7 @@ date | tee -a $LOGFILE
 # Transaction id
 txid=$1
 
+# Don't treat duplicate transactions.
 if [[ "$(grep $txid $LOGFILE)" != "" ]]; then
 		echo "Duplicate transaction $txid" | tee -a $LOGFILE
 		echo "Exiting..." | tee -a $LOGFILE

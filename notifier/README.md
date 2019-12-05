@@ -15,3 +15,5 @@ You can test the `notifier` script before adding it to your `smileycoin.conf` by
 ```
 $ ./notifier $txid
 ```
+
+When the bot is listening for transactions you can view the output logs in the logfile.
