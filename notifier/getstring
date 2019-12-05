@@ -6,7 +6,7 @@ source "$PROGRAM_PATH/constants"
 MAX_LEN=80
 
 showusage() {
-	echo "Usage: $0 -f <Operation> -u <id> [ -m <message> ]"
+	echo "Usage: $0 -f <Operation> -i <id> [ -m <message> ]"
 	echo ""
 	echo -e "Operation:\tfollow, like, retweet, mention"
 	echo -e "id:\t\tusername or tweetid"
@@ -32,7 +32,7 @@ case "$OP" in
 					str="2:$id"
 					cost=$COST_LIKE ;;
 		"retweet") 	if [[ "$id" == "" ]]; then showusage; fi
-					str="3" 
+					str="3:$id" 
 					cost=$COST_RETWEET ;;
 		"mention") 	
 					if [[ "$id" == ""  ]] || [[ "$msg" == "" ]]; then showusage; fi
