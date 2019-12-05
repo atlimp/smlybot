@@ -3,7 +3,7 @@
 PROGRAM_PATH=$(dirname $(realpath "$0"))
 source "$PROGRAM_PATH/constants"
 
-# Check if price is enough for operation
+# Check if price is enough for operation returns 1 if ok 0 otherwise
 # checkprice amount operation
 checkprice() {
 	local amount=$1
@@ -46,15 +46,22 @@ getendpoint() {
 	echo $endpoint
 }
 
+# Sends SMLY back to sender if error occured.  E.g. if twitter cannot be reached or api is down.
+# No refund if incoming transaction was invalid
 refundTransaction() {
+	
+	# input Transaction ID of incoming transaction 
     local senderTxid=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep txid | awk '{print $3}' | sed 's/[",]//g')
-    local senderVout=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep vout | awk '{print $3}' | sed 's/[",]//g')
+    # input vout of incoming transaction
+	local senderVout=$(smileycoin-cli decoderawtransaction $rawtx | sed -e '1,/vin/d' -e '/"vout"\s*:\s*\[/,$d' | grep vout | awk '{print $3}' | sed 's/[",]//g')
 
+	# Raw input transaction
     local senderTx=$(smileycoin-cli getrawtransaction $senderTxid)
-    local recipient=$(smileycoin-cli decoderawtransaction $senderTx | sed -n -e '/\s*"n"\s*:\s*'"$senderVout/,/]/p" | sed -e '$d'| sed '/]/,$d'|tail -1| sed -e 's/[",:]//g' -e 's/^\s*//g')
+    # SMLY address of sender
+	local recipient=$(smileycoin-cli decoderawtransaction $senderTx | sed -n -e '/\s*"n"\s*:\s*'"$senderVout/,/]/p" | sed -e '$d'| sed '/]/,$d'|tail -1| sed -e 's/[",:]//g' -e 's/^\s*//g')
 
 	refundid=$(smileycoin-cli sendtoaddress $recipient $(($amt - 1)))
-	echo "refunding $(($amt-1)) to $recipient, txid: $refundid" | tee -a $LOGFILE
+	echo "Refunding $(($amt-1)) to $recipient, txid: $refundid" | tee -a $LOGFILE
 }
 
 if [[ "$#" == 0 ]]; then
@@ -127,6 +134,7 @@ echo "Decoded message: $message" | tee -a $LOGFILE
 #			1: Follow, expects username as second argument.
 #			2: Like, expects tweet id of requested tweet.
 #			3: Retweet, expects tweet id of requested tweet.
+#			4: Mention, expects username and message.
 
 # Check for syntax error in message
 pattern="^[1-4]:.*$"
@@ -138,8 +146,8 @@ if [[ "$(echo $message | grep -E "$pattern")" == "" ]]; then
 		exit 1
 fi
 
+# Gets endpoint for request to nodejs server.  Empty if not enough funds.
 endpoint=$(getendpoint "$message" "$amt")
-
 
 if [[ "$endpoint" == "" ]]; then
 		echo "Not enough funds for operation" | tee -a $LOGFILE
@@ -147,20 +155,23 @@ if [[ "$endpoint" == "" ]]; then
 		exit 1
 fi
 
+
 echo "Sending HTTP request to $BASE_URL$endpoint" | tee -a $LOGFILE
-# Add error handling if curl error
+
 res=$(curl "$BASE_URL$endpoint")
 curlstatus="$?"
 
+# If nodejs server is unreachable, refund amount.
 if [[ "$curlstatus" != 0 ]]; then
 		echo "curl responded with a non zero exit status: $curlstatus" | tee -a $LOGFILE
-    refundTransaction
+		refundTransaction
 		echo "Exiting..." | tee -a $LOGFILE
 		exit 1
 fi
 
 echo "Received response from server: $res" | tee -a $LOGFILE
 
+# If error from nodejs server, twitter api responded with error.  Invalid username etc.
 if [[ "$(echo $res | grep error)" != "" ]]; then
 		# Error from API
 		echo "Received error from API: $res" | tee -a $LOGFILE

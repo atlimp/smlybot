@@ -4,14 +4,16 @@
 
 PROGRAM_PATH=$(dirname $(realpath "$0"))
 BASE_URL='http://localhost:3000'
-MY_ADDRESS='BErUz8XVaAhJN2rkee7LtLZeGnpYW9DHRx'
+
+# Address of listening bot
+MY_ADDRESS='BEK76oMDxttaiZCCsLxzr2Wb2kyKowhkL3'
 LOGFILE="$PROGRAM_PATH/logfile"
 
 # Adjust prices for OPS
-COST_FOLLOW=500
-COST_LIKE=250
-COST_RETWEET=500
-COST_MENTION=1000
+COST_FOLLOW=10
+COST_LIKE=5
+COST_RETWEET=10
+COST_MENTION=20
 
 # Indicies for OPS
 FOLLOW=1
