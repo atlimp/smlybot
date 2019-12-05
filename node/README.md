@@ -20,7 +20,7 @@ HOST=
 PORT=
 ```
 
-Input the correct values for `API_KEY`, `API_SECRET`, `ACCESS_TOKEN` and `ACCESS_SECRET`.  These can be found via the developer console on twitter.  The `HOST` and `PORT` values are for the web server.
+Input the correct values for `API_KEY`, `API_SECRET`, `ACCESS_TOKEN` and `ACCESS_SECRET`.  These can be found via the developer console on twitter.  The `HOST` and `PORT` values are for the web server.  Name this new file `.env`
 
 ## Running the web server
 
