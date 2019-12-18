@@ -36,6 +36,8 @@ An example raw transaction will then be
 smileycoin-cli createrawtransaction '[{"txid":"f65f559303afbd1b0b5e7a65c5994f9cd077ffe06b374b1a9601a1714123bdfa","vout":1}]' '{"BEK76oMDxttaiZCCsLxzr2Wb2kyKowhkL3":15, "data":"333a31323031393137303233303238323037363137"}'
 ```
 
+If the bot is unable to send a request to twitter you will be refunded the amount (minus transaction fees).
+
 ## Installation
 Clone this repository using
 
